@@ -21,7 +21,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setTitle('Adding to game')
             .setColor("DARK_BLUE")
-            .setURL('https://github.com/KaceCottam/IndexBot5')
+            .setFooter('https://github.com/KaceCottam/IndexBot5')
         let existingRole = interaction.guild.roles.cache.find(r => r.name === input_)
         if (!existingRole) {
             const newRole = await interaction.guild.roles.create({

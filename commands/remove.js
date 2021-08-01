@@ -20,7 +20,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setTitle("Removing from game")
             .setColor("DARK_BLUE")
-            .setURL('https://github.com/KaceCottam/IndexBot5')
+            .setFooter('https://github.com/KaceCottam/IndexBot5')
         try {
             db.removeUserFromRole(interaction.guild.id, role.id, interaction.user.id)
             console.log(`Removing user ${interaction.user.id} from role ${role.id}.`)

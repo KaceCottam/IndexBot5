@@ -20,7 +20,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setTitle("Adding to game")
             .setColor("DARK_BLUE")
-            .setURL('https://github.com/KaceCottam/IndexBot5')
+            .setFooter('https://github.com/KaceCottam/IndexBot5')
         try {
             db.addRoles(interaction.guild.id, role.id, interaction.user.id)
             embed.addField(':video_game: Successfully added user to the game!', `Added ${interaction.user} to ${role}!`)

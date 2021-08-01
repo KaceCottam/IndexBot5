@@ -19,7 +19,7 @@ module.exports = {
         let embed = new MessageEmbed()
             .setColor("DARK_BLUE")
             .setTitle(`${user ? user.username : interaction.guild}'s roles`)
-            .setURL('https://github.com/KaceCottam/IndexBot5')
+            .setFooter('https://github.com/KaceCottam/IndexBot5')
         const allRoles = user ? await db.listRoles(interaction.guild.id, user.id) : await db.listAllRoles(interaction.guild.id)
         const roles = await Promise.all(allRoles.map(roleid => interaction.guild.roles.fetch(roleid)))
         if (roles.length == 0) {

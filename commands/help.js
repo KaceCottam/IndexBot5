@@ -12,7 +12,7 @@ module.exports = {
         embed = new MessageEmbed()
             .setColor("DARK_BLUE")
             .setTitle('IndexBot v5 Help')
-            .setURL('https://github.com/KaceCottam/IndexBot5')
+            .setFooter('https://github.com/KaceCottam/IndexBot5')
             .setDescription("I will ping everyone subscribed to a game if someone mentions that game!")
             .addFields(
                 { name: "/help", value: "Displays help information", inline: false },
