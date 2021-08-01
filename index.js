@@ -1,4 +1,4 @@
-const { Client, Intents, DiscordAPIError } = require('discord.js')
+const { Client, Intents, DiscordAPIError, MessageEmbed, MessageAttachment } = require('discord.js')
 const { TOKEN, APPLICATION_ID, ROLES_DB, GUILD_IDS } = require('./config.json')
 const api = require('./api.js')
 const fs = require('fs')
@@ -18,16 +18,27 @@ async function deployCommands(guild_ids) {
         .map(file => {
             console.log(`Loading ./commands/${file}...`)
 
-            const { json, execute } = require('./commands/' + file)
+            const { json, execute } = require('./commands/' + file)//
 
             client.on('interactionCreate', async interaction => {
                 if (!interaction.isCommand() || interaction.commandName != json.name) return // this may be inefficient
-                let args = {}
-                json.options?.forEach(option => {
-                    const f = 'get' + option.type[0] + option.type.substring(1).toLowerCase()
-                    args[option.name] = interaction.options[f](option.name)
-                })
-                await execute(interaction, db, args)
+                let args = { client }
+                try {
+                    json.options?.forEach(option => {
+                        const f = 'get' + option.type[0] + option.type.substring(1).toLowerCase()
+                        args[option.name] = interaction.options[f](option.name)
+                    })
+                    await execute(interaction, db, args)
+                } catch (err) {
+                    console.error("Error! ", err)
+                    const embed = new MessageEmbed()
+                        .setTitle("Error with interaction")
+                        .setColor("RED")
+                        .setFooter('https://github.com/KaceCottam/IndexBot5')
+                        .setDescription(':x: There was an error!')
+                    const errorMessage = new MessageAttachment(err.toString(), `${json.name}-error-trace`)
+                    await interaction.reply({ embeds: [embed], files: [errorMessage] })
+                }
             })
             return json
         })
@@ -69,13 +80,17 @@ client.on('messageCreate', async message => {
     const allRoles = await db.listAllRoles(message.guild.id)
     const gameRoles = message.mentions.roles
         .filter(role => allRoles.indexOf(role.id) > -1)
+
     if (gameRoles.size == 0) return
-
-    const threadName = [...gameRoles.values()].map(it => it.name).join('-') + ' Discussion'
-
-    const thread = await message.startThread({ name: threadName, autoArchiveDuration: 1440 })
     const mentionedUsers = [...gameRoles.values()].map(role => db.listUsers(message.guild.id, role.id)).flat().map(user => `<@${user}>`)
-    await thread.send(uniques(mentionedUsers).join(' '))
+    const finalMessage = uniques(mentionedUsers).join(' ')
+    if (message.channel.isThread()) {
+        await message.reply(finalMessage)
+    } else {
+        const threadName = [...gameRoles.values()].map(it => it.name).join('-') + ' Discussion'
+        const thread = await message.startThread({ name: threadName, autoArchiveDuration: 1440 })
+        await thread.send(finalMessage)
+    }
 })
 
 client.on('error', err => {

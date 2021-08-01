@@ -11,8 +11,7 @@
   "author": "Kace Cottam",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "github:discordjs/discord.js",
-    "discordjs-colors": "^1.2.3",
+    "discord.js": "^13.0.0-dev.t1627778678.74fc23b",
     "sql.js": "^1.5.0"
   }
 }

@@ -28,6 +28,10 @@ module.exports = {
         } else {
             embed.addField(":video_game: Roles", roles.map(r => `${r}`).join('\n'), false)
         }
-        await interaction.reply({ embeds: [embed] })
+        try {
+            await interaction.reply({ embeds: [embed] })
+        } catch {
+            await interaction.reply("The intended message is too big!")
+        }
     }
 }
