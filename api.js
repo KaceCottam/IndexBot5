@@ -1,8 +1,9 @@
 const initSqlJs = require('sql.js')
 const fs = require('fs')
 
-const migrateGuild = (fromDBPath, toDBPath, guildid) => {
-    const fromDB = new sqlite3.Database(fromDBPath)
+const migrateGuild = async (fromDBPath, toDBPath, guildid) => {
+    const SQL = await initSqlJs()
+    const fromDB = new SQL.Database(fromDBPath)
     const toDB = makeApi(toDBPath)
     fromDB.each(`SELECT * FROM guild_${guildid}`, (err, row) => {
         if (err) throw err
