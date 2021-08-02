@@ -10,7 +10,6 @@
     "status": "pm2 logs indexbot5",
     "stop": "pm2 stop indexbot5",
     "restart": "pm2 restart indexbot5",
-    "lint": "eslint ."
   },
   "author": "Kace Cottam",
   "license": "MIT",
@@ -19,8 +18,5 @@
     "moment": "^2.29.1",
     "pm2": "^5.1.0",
     "sql.js": "^1.5.0"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.12"
   }
 }
