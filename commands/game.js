@@ -1,5 +1,4 @@
 const { MessageEmbed } = require('discord.js')
-const { ROLES_DB } = require('../config.json')
 
 const DATA = {
     "name": "game",
@@ -16,8 +15,16 @@ const DATA = {
 
 module.exports = {
     json: DATA,
-    execute: async (interaction, db, { client, input }) => {
+    execute: async (interaction, db, { input }) => {
         const input_ = input.toLowerCase().trim()
+        if ((/<@.*>/g).test(input_)) {
+            const embed = new MessageEmbed()
+                .setTitle('Adding to game')
+                .setFooter('https://github.com/KaceCottam/IndexBot5')
+                .setColor("RED")
+                .setDescription("You tried creating a role with an '@'!\nTry using /join instead!")
+            return await interaction.reply({ embeds: [embed], ephemeral: true })
+        }
         const embed = new MessageEmbed()
             .setTitle('Adding to game')
             .setColor("DARK_BLUE")
@@ -40,16 +47,7 @@ module.exports = {
                 return
             }
         }
-        try {
-            db.addRoles(interaction.guild.id, existingRole.id, interaction.user.id)
-            console.log(`Adding user ${interaction.user.id} to role ${existingRole.id}.`)
-            embed.addField(':video_game: Successfully added user to the game!', `Added ${interaction.user} to ${existingRole}!`)
-        } catch {
-            embed.setColor("RED")
-            embed.addField(":x: Error!", `Already in ${existingRole}!`)
-        }
-        db.commit(ROLES_DB)
 
-        await interaction.reply({ embeds: [embed] })
+        require('./join').execute(interaction, db, { role: existingRole, existingEmbed: embed })
     }
 }

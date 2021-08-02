@@ -10,8 +10,8 @@ module.exports = {
     execute: async (interaction, db) => {
         // code here
         embed = new MessageEmbed()
-            .setColor("DARK_BLUE")
             .setTitle('IndexBot v5 Help')
+            .setColor("DARK_BLUE")
             .setFooter('https://github.com/KaceCottam/IndexBot5')
             .setDescription("I will ping everyone subscribed to a game if someone mentions that game!")
             .addFields(

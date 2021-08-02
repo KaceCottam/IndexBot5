@@ -2,6 +2,7 @@
   "name": "indexbot5",
   "version": "1.0.0",
   "description": "Index bot for discord",
+  "homepage": "https://github.com/KaceCottam/Indexbot5",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,6 +13,10 @@
   "license": "MIT",
   "dependencies": {
     "discord.js": "^13.0.0-dev.t1627778678.74fc23b",
+    "moment": "^2.29.1",
     "sql.js": "^1.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }

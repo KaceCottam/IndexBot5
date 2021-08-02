@@ -1,9 +1,8 @@
-const { Client, Intents, DiscordAPIError, MessageEmbed, MessageAttachment } = require('discord.js')
-const { TOKEN, APPLICATION_ID, ROLES_DB, GUILD_IDS } = require('./config.json')
+const { Client, Intents, MessageEmbed, MessageAttachment, Formatters } = require('discord.js')
+const { TOKEN, ROLES_DB, GUILD_IDS } = require('./config.json')
 const api = require('./api.js')
 const fs = require('fs')
-const { inspect } = require('util')
-const { exit } = require('process')
+const moment = require('moment')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
 let db
 
@@ -18,16 +17,19 @@ async function deployCommands(guild_ids) {
         .map(file => {
             console.log(`Loading ./commands/${file}...`)
 
-            const { json, execute } = require('./commands/' + file)//
+            const { json, execute, setup } = require('./commands/' + file)//
+
+            if (setup) setup(db, client)
 
             client.on('interactionCreate', async interaction => {
                 if (!interaction.isCommand() || interaction.commandName != json.name) return // this may be inefficient
+                if (!interaction.guild) return // if the interaction is not in a guild dont do it
                 let args = { client }
+                json.options?.forEach(option => {
+                    const f = 'get' + option.type[0] + option.type.substring(1).toLowerCase()
+                    args[option.name] = interaction.options[f](option.name)
+                })
                 try {
-                    json.options?.forEach(option => {
-                        const f = 'get' + option.type[0] + option.type.substring(1).toLowerCase()
-                        args[option.name] = interaction.options[f](option.name)
-                    })
                     await execute(interaction, db, args)
                 } catch (err) {
                     console.error("Error! ", err)
@@ -55,8 +57,8 @@ async function deployCommands(guild_ids) {
 
 client.on('ready', async () => {
     console.log(`Connected as ${client.user.username}#${client.user.discriminator} (${client.user.id})!`)
-    await deployCommands(GUILD_IDS)
     db = await api.makeApi(ROLES_DB)
+    await deployCommands(GUILD_IDS)
     console.log("READY")
     console.log("------------------------")
 })
@@ -84,13 +86,19 @@ client.on('messageCreate', async message => {
     if (gameRoles.size == 0) return
     const mentionedUsers = [...gameRoles.values()].map(role => db.listUsers(message.guild.id, role.id)).flat().map(user => `<@${user}>`)
     const finalMessage = uniques(mentionedUsers).join(' ')
-    if (message.channel.isThread()) {
-        await message.reply(finalMessage)
-    } else {
-        const threadName = [...gameRoles.values()].map(it => it.name).join('-') + ' Discussion'
-        const thread = await message.startThread({ name: threadName, autoArchiveDuration: 1440 })
-        await thread.send(finalMessage)
-    }
+
+    if (message.channel.isThread()) return await message.reply(finalMessage)
+    const threadName = `[${moment(message.createdTimestamp).format('MM-DD-YY')}] ${[...gameRoles.values()].map(it => it.name).join('-')} Discussion`
+    //const embed = new MessageEmbed()
+    //    .setDescription(message.content)
+    //    .setURL(message.url)
+    //    .setTitle([...gameRoles.values()].map(role => role.name).join('/'))
+    //    .setColor('RANDOM')
+    //    .setAuthor(message.author.username, message.author.avatarURL(true), url=message.url)
+    //const reply = await message.reply({ content: finalMessage, ephemeral: true })
+
+    const thread = await message.startThread({ name: threadName, autoArchiveDuration: 60 })
+    await thread.send({ content: finalMessage })
 })
 
 client.on('error', err => {
