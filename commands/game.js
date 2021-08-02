@@ -1,3 +1,5 @@
+const { MessageActionRow } = require('discord.js')
+const { MessageButton } = require('discord.js')
 const { MessageEmbed } = require('discord.js')
 
 const DATA = {
@@ -17,13 +19,22 @@ module.exports = {
     json: DATA,
     execute: async (interaction, db, { input }) => {
         const input_ = input.toLowerCase().trim()
-        if ((/<@.*>/g).test(input_)) {
-            const embed = new MessageEmbed()
+        const regex = /<([^\d]{0,2})(\d+)>/
+        const found = input_.match(regex)
+        if (found) {
+            const badAttempt = async () => {
+                const embed = new MessageEmbed()
                 .setTitle('Adding to game')
                 .setFooter('https://github.com/KaceCottam/IndexBot5')
                 .setColor("RED")
-                .setDescription("You tried creating a role with an '@'!\nTry using /join instead!")
-            return await interaction.reply({ embeds: [embed], ephemeral: true })
+                .setDescription("You tried creating a role with an '@'!")
+                return await interaction.reply({ embeds: [embed], ephemeral: true })
+            }
+            const [ _, kind, id ] = found
+            if (kind && kind != '@&') return await badAttempt()
+            const role = await interaction.guild.roles.fetch(id)
+            if (!role) return await badAttempt()
+            return await require('./join').execute(interaction, db, { role })
         }
         const embed = new MessageEmbed()
             .setTitle('Adding to game')
