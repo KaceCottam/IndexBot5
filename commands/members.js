@@ -28,7 +28,7 @@ module.exports = {
             const message = uniques(mentions).join(' ') || "There are no members subscribed to this role."
             embed.setDescription(message)
             await interaction.reply({ embeds: [embed], ephemeral: true })
-        //} catch {
+        //} catch (err) {
         //    embed.addField(":x: Error!", "Something bad happened :(", false)
         //    embed.setColor("RED")
         //    await interaction.reply({ embeds: [embed], ephemeral: true })

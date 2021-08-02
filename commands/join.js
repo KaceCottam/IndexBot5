@@ -35,7 +35,7 @@ async function execute(interaction, db, { role, existingEmbed, secretReply })  {
         db.addRoles(interaction.guild.id, role.id, interaction.user.id)
         embed.addField(':video_game: Successfully added user to the game!', `Added ${interaction.user} to ${role}!`)
         console.log(`Adding user ${interaction.user.id} to role ${role.id}.`)
-    } catch {
+    } catch (err) {
         embed.setColor("RED")
         embed.addField(":x: Error!", `Already in ${role}!`)
     }
@@ -43,7 +43,7 @@ async function execute(interaction, db, { role, existingEmbed, secretReply })  {
 
     try {
         if (secretReply) return await interaction.reply({ embeds: [embed], ephemeral: true })
-    } catch {
+    } catch (err) {
         return
     }
 

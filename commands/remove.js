@@ -25,7 +25,7 @@ module.exports = {
             db.removeUserFromRole(interaction.guild.id, role.id, interaction.user.id)
             console.log(`Removing user ${interaction.user.id} from role ${role.id}.`)
             embed.addField(':no_bell: Successfully unsubscribed from game!', `Unsubscribed from notifications for ${role.members.size != 0 ? role : role.name}.`, false)
-        } catch {
+        } catch (err) {
             embed.setColor("RED")
             embed.addField(":x: Error!", `Not recieving notifications for ${role}!`, false)
         }

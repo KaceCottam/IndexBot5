@@ -26,7 +26,7 @@ const makeApi = async path => {
         listUsers: (guildid, roleid) => {
             try {
                 return db.exec("SELECT userid FROM roles WHERE guildid = ? AND roleid = ?", [guildid, roleid])[0].values.flat()
-            } catch {
+            } catch (err) {
                 return []
             }
         },
@@ -34,14 +34,14 @@ const makeApi = async path => {
         listRoles: (guildid, userid) => {
             try {
                 return db.exec("SELECT roleid FROM roles WHERE guildid = ? AND userid = ?", [guildid, userid])[0].values.flat()
-            } catch {
+            } catch (err) {
                 return []
             }
         },
         listAllRoles: guildid => {
             try {
                 return db.exec("SELECT roleid FROM roles WHERE guildid = ?", [guildid])[0].values.flat()
-            } catch {
+            } catch (err) {
                 return []
             }
         },

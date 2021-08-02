@@ -30,7 +30,7 @@ module.exports = {
         }
         try {
             await interaction.reply({ embeds: [embed] })
-        } catch {
+        } catch (err) {
             await interaction.reply("The intended message is too big!")
         }
     }

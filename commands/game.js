@@ -50,7 +50,7 @@ module.exports = {
                     .setColor("GREEN")
                 existingRole = newRole
                 console.log(`New role '${newRole.id}' created in guild '${interaction.guild.id}'`)
-            } catch {
+            } catch (err) {
                 embed.addField(':x: Error!', 'That name is too long!')
                 await interaction.reply({ embeds: [embed] })
                 return
