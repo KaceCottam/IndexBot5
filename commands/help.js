@@ -20,6 +20,7 @@ module.exports = {
                 { name: "/remove <role>", value: "Removes you from the notification list for a game", inline: false },
                 { name: "/mygames", value: "Displays all the games you are being notified for", inline: false },
                 { name: "/roles [user]", value: "Displays all the games in the server, or of a user", inline: false },
+                { name: "/members [role]", value: "See the notification list for a game", inline: false },
                 // { name: "/forcejoin <user> <role>", value: "Forces a user to join a role (admin)", inline: false },
                 // { name: "/forceremove <user> <role>", value: "Forces a user to be removed from a role (admin)", inline: false },
                 // { name: "/removerole <role>", value: "Deletes a role (admin)", inline: false }

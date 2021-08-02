@@ -28,9 +28,9 @@ eventer.on('newListener', (event, listener) => {
 
 async function execute(interaction, db, { role, existingEmbed, secretReply })  {
     const embed = existingEmbed || new MessageEmbed()
-    .setTitle("Adding to game")
-    .setColor("DARK_BLUE")
-    .setFooter('https://github.com/KaceCottam/IndexBot5')
+        .setTitle("Adding to game")
+        .setColor("DARK_BLUE")
+        .setFooter('https://github.com/KaceCottam/IndexBot5')
     try {
         db.addRoles(interaction.guild.id, role.id, interaction.user.id)
         embed.addField(':video_game: Successfully added user to the game!', `Added ${interaction.user} to ${role}!`)

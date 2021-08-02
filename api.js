@@ -1,15 +1,13 @@
 const initSqlJs = require('sql.js')
 const fs = require('fs')
 
-const beginMigrate = (fromDBPath, toDBPath) => {
+const migrateGuild = (fromDBPath, toDBPath, guildid) => {
     const fromDB = new sqlite3.Database(fromDBPath)
     const toDB = makeApi(toDBPath)
-    return [fromDB, toDB]
-}
-const migrateGuild = (fromDB, toDB, guildid) => {
     fromDB.each(`SELECT * FROM guild_${guildid}`, (err, row) => {
         if (err) throw err
-        addRoles(toDB, guildid, row.roleid, row.userid)
+        toDB.addRoles(guildid, row.roleid, row.userid)
+        console.log(`Migrated GID:${guildid}|RID:${row.roleid}|UID:${row.userid}`)
     })
 }
 
@@ -53,6 +51,5 @@ const makeApi = async path => {
 
 module.exports = {
     makeApi,
-    beginMigrate,
     migrateGuild
 }
