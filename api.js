@@ -14,8 +14,9 @@ const migrateGuild = async (fromDBPath, toDBPath, guildid) => {
 
 const makeApi = async path => {
     const SQL = await initSqlJs()
-    const db = new SQL.Database(fs.readFileSync(path))
-    db.run("CREATE TABLE IF NOT EXISTS roles (guildid TEXT, roleid TEXT, userid TEXT, UNIQUE(roleid, userid))")
+    const db = fs.existsSync(path)
+        ? new SQL.Database(fs.readFileSync(path))
+        : new SQL.Database().run("CREATE TABLE roles (guildid TEXT, roleid TEXT, userid TEXT, UNIQUE(roleid, userid))")
     return {
         commit: path => {
             const data = db.export()

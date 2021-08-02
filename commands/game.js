@@ -52,7 +52,7 @@ module.exports = {
                 console.log(`New role '${newRole.id}' created in guild '${interaction.guild.id}'`)
             } catch (err) {
                 embed.addField(':x: Error!', 'That name is too long!')
-                await interaction.reply({ embeds: [embed] })
+                await interaction.reply({ embeds: [embed], ephemeral: true })
                 return
             }
         }

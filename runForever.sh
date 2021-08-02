@@ -6,5 +6,4 @@ if ! [[ -f config.json ]]; then
     exit 1
 fi
 ROLES_DB=$(jq -r .ROLES_DB config.json)
-test -f $ROLES_DB || (echo > $ROLES_DB; echo "Created $ROLES_DB")
-npx pm2 start index.js --name indexbot5 || echo 'Make sure you run `npm install --production`!'
+while true; do node .; done

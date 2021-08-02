@@ -6,17 +6,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./.run.sh",
-    "status": "pm2 logs indexbot5",
-    "stop": "pm2 stop indexbot5",
-    "restart": "pm2 restart indexbot5"
+    "start": "node ."
   },
   "author": "Kace Cottam",
   "license": "MIT",
   "dependencies": {
     "discord.js": "^13.0.0-dev.t1627778678.74fc23b",
+    "forever": "^4.0.1",
     "moment": "^2.29.1",
-    "pm2": "^5.1.0",
     "sql.js": "^1.5.0"
   }
 }

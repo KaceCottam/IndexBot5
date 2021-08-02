@@ -70,7 +70,11 @@ async function execute(interaction, db, { role, existingEmbed, secretReply })  {
         .setEmoji("🔔")
 
     const row = new MessageActionRow().addComponents(button)
-    await interaction.reply({ embeds: [embed], components: [row] })
+    try {
+        await interaction.reply({ embeds: [embed], components: [row] })
+    } catch (err) {
+        return
+    }
 }
 
 module.exports = {
