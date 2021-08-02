@@ -8,42 +8,44 @@ let db
 
 const uniques = xs => [...new Set(xs)]
 
+function loadFile(file) {
+    console.log(`Loading ./commands/${file}...`)
+
+    const { json, execute, setup } = require('./commands/' + file)//
+
+    if (setup) setup(db, client)
+
+    client.on('interactionCreate', async interaction => {
+        if (!interaction.isCommand() || interaction.commandName != json.name) return // this may be inefficient
+        if (!interaction.guild) return // if the interaction is not in a guild dont do it
+        let args = { client }
+        json.options?.forEach(option => {
+            const f = 'get' + option.type[0] + option.type.substring(1).toLowerCase()
+            args[option.name] = interaction.options[f](option.name)
+        })
+        try {
+            await execute(interaction, db, args)
+        } catch (err) {
+            console.error("Error! ", err)
+            const embed = new MessageEmbed()
+                .setTitle("Error with interaction")
+                .setColor("RED")
+                .setFooter('https://github.com/KaceCottam/IndexBot5')
+                .setDescription(':x: There was an error!')
+            const errorMessage = new MessageAttachment(err.toString(), `${json.name}-error-trace`)
+            await interaction.reply({ embeds: [embed], files: [errorMessage] })
+        }
+    })
+    return json
+}
+
 async function deployCommands(guild_ids) {
     console.log('Deploying commands...')
-
+    console.log()
     let data = fs
         .readdirSync('./commands')
         .filter(filename => filename.endsWith('.js'))
-        .map(file => {
-            console.log(`Loading ./commands/${file}...`)
-
-            const { json, execute, setup } = require('./commands/' + file)//
-
-            if (setup) setup(db, client)
-
-            client.on('interactionCreate', async interaction => {
-                if (!interaction.isCommand() || interaction.commandName != json.name) return // this may be inefficient
-                if (!interaction.guild) return // if the interaction is not in a guild dont do it
-                let args = { client }
-                json.options?.forEach(option => {
-                    const f = 'get' + option.type[0] + option.type.substring(1).toLowerCase()
-                    args[option.name] = interaction.options[f](option.name)
-                })
-                try {
-                    await execute(interaction, db, args)
-                } catch (err) {
-                    console.error("Error! ", err)
-                    const embed = new MessageEmbed()
-                        .setTitle("Error with interaction")
-                        .setColor("RED")
-                        .setFooter('https://github.com/KaceCottam/IndexBot5')
-                        .setDescription(':x: There was an error!')
-                    const errorMessage = new MessageAttachment(err.toString(), `${json.name}-error-trace`)
-                    await interaction.reply({ embeds: [embed], files: [errorMessage] })
-                }
-            })
-            return json
-        })
+        .map(loadFile)
 
     await Promise.all(
         client.guilds.cache.map(async guild => {
@@ -89,13 +91,6 @@ client.on('messageCreate', async message => {
 
     if (message.channel.isThread()) return await message.reply(finalMessage)
     const threadName = `[${moment(message.createdTimestamp).format('MM-DD-YY')}] ${[...gameRoles.values()].map(it => it.name).join('-')} Discussion`
-    //const embed = new MessageEmbed()
-    //    .setDescription(message.content)
-    //    .setURL(message.url)
-    //    .setTitle([...gameRoles.values()].map(role => role.name).join('/'))
-    //    .setColor('RANDOM')
-    //    .setAuthor(message.author.username, message.author.avatarURL(true), url=message.url)
-    //const reply = await message.reply({ content: finalMessage, ephemeral: true })
 
     const thread = await message.startThread({ name: threadName, autoArchiveDuration: 60 })
     await thread.send({ content: finalMessage })
