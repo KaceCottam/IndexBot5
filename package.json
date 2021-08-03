@@ -12,6 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "discord.js": "^13.0.0-dev.t1627778678.74fc23b",
+    "express": "^4.17.1",
     "forever": "^4.0.1",
     "moment": "^2.29.1",
     "sql.js": "^1.5.0"
