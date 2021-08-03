@@ -6,15 +6,12 @@ Based on [Index Bot 4](https://github.com/KaceCottam/IndexBot4), but now uses th
 # get correct npm packages
 $ npm install --production
 
-# start the bot in a daemon
+# start the bot (no autorestart after crash)
 $ npm start
 
-# restart the bot if need be (should auto restart if there is a crash)
-$ npm run restart
+# start the bot (with autorestart after crash)
+$ ./runForever.sh
 
-# check on the logs of the bot (Ctrl-C to exit out of this interface)
-$ npm run status
-
-# stop the bot if need be
-$ npm run stop
+# migrate from indexbot4 roles.db to indexbot5 roles.db
+$ ./migrate.sh <oldroles.db> <guildid you want to migrate>
 ```

@@ -7,8 +7,12 @@ const migrateGuild = async (fromDBPath, toDBPath, guildid) => {
     const toDB = await makeApi(toDBPath)
     fromDB.each(`SELECT * FROM guild_${guildid}`, (row, err) => {
         if (err) throw err
-        toDB.addRoles(guildid, row.roleid.toString(), row.userid.toString())
-        console.log(`Migrated GID:${guildid}|RID:${row.roleid}|UID:${row.userid}`)
+        try {
+            toDB.addRoles(guildid, row.roleid.toString(), row.userid.toString())
+            console.log(`Migrated GID:${guildid}|RID:${row.roleid}|UID:${row.userid}`)
+        } catch (err2) {
+            console.log(`Error migrating GID:${guildid}|RID:${row.roleid}|UID:${row.userid} (It possibly already exists!)`)
+        }
     })
     toDB.commit(toDBPath)
 }
