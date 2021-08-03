@@ -1,14 +1,14 @@
 const { MessageEmbed } = require('discord.js')
 
 const DATA = {
-    "name": "game",
-    "description": "Adds you to the notification list for a game",
-    "options": [
+    'name': 'game',
+    'description': 'Adds you to the notification list for a game',
+    'options': [
         {
-            "name": "input",
-            "description": "Which game do you want to be notified for?",
-            "type": "STRING",
-            "required": true
+            'name': 'input',
+            'description': 'Which game do you want to be notified for?',
+            'type': 'STRING',
+            'required': true
         }
     ]
 }
@@ -22,13 +22,17 @@ module.exports = {
         if (found) {
             const badAttempt = async () => {
                 const embed = new MessageEmbed()
-                .setTitle('Adding to game')
-                .setFooter('https://github.com/KaceCottam/IndexBot5')
-                .setColor("RED")
-                .setDescription("You tried creating a role with an '@'!")
-                return await interaction.reply({ embeds: [embed], ephemeral: true })
+                    .setTitle('Adding to game')
+                    .setFooter('https://github.com/KaceCottam/IndexBot5')
+                    .setColor('RED')
+                    .setDescription('You tried creating a role with an \'@\'!')
+                try {
+                    return await interaction.reply({ embeds: [embed], ephemeral: true })
+                } catch (err) {
+                    return console.log(err)
+                }
             }
-            const [ _, kind, id ] = found
+            const [ , kind, id ] = found
             if (kind && kind != '@&') return await badAttempt()
             const role = await interaction.guild.roles.fetch(id)
             if (!role) return await badAttempt()
@@ -36,7 +40,7 @@ module.exports = {
         }
         const embed = new MessageEmbed()
             .setTitle('Adding to game')
-            .setColor("DARK_BLUE")
+            .setColor('DARK_BLUE')
             .setFooter('https://github.com/KaceCottam/IndexBot5')
         let existingRole = interaction.guild.roles.cache.find(r => r.name === input_)
         if (!existingRole) {
@@ -47,16 +51,14 @@ module.exports = {
                 })
                 embed
                     .addField(':white_check_mark: New role created!', `New role ${newRole} created!`, false)
-                    .setColor("GREEN")
+                    .setColor('GREEN')
                 existingRole = newRole
                 console.log(`New role '${newRole.id}' created in guild '${interaction.guild.id}'`)
             } catch (err) {
-                embed.addField(':x: Error!', 'That name is too long!')
-                await interaction.reply({ embeds: [embed], ephemeral: true })
-                return
+                return console.error(err)
             }
         }
 
-        require('./join').execute(interaction, db, { role: existingRole, existingEmbed: embed })
+        return await require('./join').execute(interaction, db, { role: existingRole, existingEmbed: embed })
     }
 }
