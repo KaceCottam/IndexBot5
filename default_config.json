@@ -1,6 +1,5 @@
 {
     "TOKEN": "",
-    "APPLICATION_ID": "",
     "ROLES_DB": "roles.db",
     "GUILD_IDS": [ ]
 }
