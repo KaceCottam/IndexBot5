@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 # please use `npm start` instead!
 if ! [[ -f config.json ]]; then
     cp -v default_config.json config.json
