@@ -99,7 +99,7 @@ client.on('messageCreate', async message => {
 
     const threadName = `[${moment(message.createdTimestamp).format('MM-DD-YY')}] ${[...gameRoles.values()].map(it => it.name).join('-')} Discussion`
 
-    const thread = await message.startThread({ name: threadName, autoArchiveDuration: 60 })
+    const thread = await message.startThread({ name: threadName, autoArchiveDuration: 1440 })
 
     return await reactionWatch(async () => await thread.send({ content: finalMessage }))
 })
