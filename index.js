@@ -19,7 +19,7 @@ function loadFile(file) {
         if (!interaction.isCommand() || interaction.commandName != json.name) return // this may be inefficient
         if (!interaction.guild) return // if the interaction is not in a guild dont do it
         let args = { client }
-        json.options?.forEach(option => {
+        if (json.options) json.options.forEach(option => {
             const f = 'get' + option.type[0] + option.type.substring(1).toLowerCase()
             args[option.name] = interaction.options[f](option.name)
         })
