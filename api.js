@@ -3,13 +3,14 @@ const fs = require('fs')
 
 const migrateGuild = async (fromDBPath, toDBPath, guildid) => {
     const SQL = await initSqlJs()
-    const fromDB = new SQL.Database(fromDBPath)
-    const toDB = makeApi(toDBPath)
-    fromDB.each(`SELECT * FROM guild_${guildid}`, (err, row) => {
+    const fromDB = new SQL.Database(fs.readFileSync(fromDBPath))
+    const toDB = await makeApi(toDBPath)
+    fromDB.each(`SELECT * FROM guild_${guildid}`, (row, err) => {
         if (err) throw err
-        toDB.addRoles(guildid, row.roleid, row.userid)
+        toDB.addRoles(guildid, row.roleid.toString(), row.userid.toString())
         console.log(`Migrated GID:${guildid}|RID:${row.roleid}|UID:${row.userid}`)
     })
+    toDB.commit(toDBPath)
 }
 
 const makeApi = async path => {
