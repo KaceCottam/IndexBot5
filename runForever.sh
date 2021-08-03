@@ -5,5 +5,5 @@ if ! [[ -f config.json ]]; then
     echo "Please set up the config.json"
     exit 1
 fi
-ROLES_DB=$(jq -r .ROLES_DB config.json)
+ROLES_DB=$(node -e 'console.log(require("./config.json").ROLES_DB)')
 while true; do node .; done
