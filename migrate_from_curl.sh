@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+[ ! -f ./roles.db ] && echo "This is not an indexbot4 directory!" && exit 1
 git clone https://github.com/KaceCottam/IndexBot5 -o IndexBot5
 cp ./roles.db IndexBot5/old_roles.db -v
 source ./.env

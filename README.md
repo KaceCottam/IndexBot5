@@ -15,3 +15,11 @@ $ ./runForever.sh
 # migrate from indexbot4 roles.db to indexbot5 roles.db
 $ ./migrate.sh <oldroles.db> <guildid you want to migrate>
 ```
+
+## Migrating from Indexbot4
+You will need `npm` and `sqlite3` to run the [following script](./migrate_from_curl.sh).
+
+```console
+# from inside your indexbot4 directory, this creates an indexbot5 directory and populates it automatically.
+$ curl https://raw.githubusercontent.com/KaceCottam/IndexBot5/master/migrate_from_curl.sh | bash
+```
